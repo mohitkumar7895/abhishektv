@@ -191,7 +191,7 @@ function Section({ section, extras, homeVariant }: { section: PageSection; extra
                       <CmsImage
                         src={service.image_url}
                         alt={service.name}
-                        className="object-cover transition duration-500 group-hover:scale-105"
+                        className="object-contain p-2 transition duration-500 group-hover:scale-[1.02] sm:p-3"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       />
                     ) : (

@@ -23,7 +23,7 @@ export function ServiceCard({
         <CmsImage
           src={image || servicePhoto(slug)}
           alt={name}
-          className="object-cover transition duration-500 group-hover:scale-105"
+          className="object-contain bg-cream p-2 transition duration-500 group-hover:scale-[1.02] sm:p-3"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
         />
         <span className="absolute inset-0 bg-linear-to-t from-navy/55 to-transparent" />
