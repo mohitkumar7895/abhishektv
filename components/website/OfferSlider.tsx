@@ -36,7 +36,7 @@ export function OfferSlider({ images }: { images: string[] }) {
             <img 
               src={resolveWorkImage(img) || SITE_IMAGES.hero} 
               alt={`Slide ${i + 1}`} 
-              className="w-full h-auto object-contain block" 
+              className="w-full h-auto max-h-[300px] sm:max-h-[400px] md:max-h-[500px] object-contain block mx-auto" 
               loading={i === 0 ? "eager" : "lazy"} 
             />
           </div>
