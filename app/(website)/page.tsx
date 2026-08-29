@@ -44,7 +44,7 @@ export default async function HomePage() {
 
     if (!page) notFound();
 
-    const heroTypes = new Set(["hero", "offer_slider", "brands", "trust_badges"]);
+    const heroTypes = new Set(["offer_slider", "brands", "trust_badges"]);
     const HIDDEN_HEADINGS = ["Expert TV Repair Services"];
 
     const topSections = page.sections.filter((s) => heroTypes.has(s.type));
@@ -54,6 +54,7 @@ export default async function HomePage() {
       (s) => s.type === "features" && (s.content?.heading as string | undefined)?.toLowerCase().includes("why choose")
     );
     const restSections = page.sections.filter((s) => {
+      if (s.type === "hero") return false;
       if (heroTypes.has(s.type)) return false;
       if (s.type === "services_grid" || s.type === "statistics") return false;
       if (s.type === "features" && (s.content?.heading as string | undefined)?.toLowerCase().includes("why choose")) return false;
@@ -62,7 +63,8 @@ export default async function HomePage() {
       return true;
     });
 
-    const bannerImages = (site.settings["promo.banners"] || "/images/tv-banner.jpg")
+    const defaultBanners = "/images/promo_banner_1.jpg,/images/promo_banner_2.jpg,/images/promo_banner_3.jpg";
+    const bannerImages = (site.settings["promo.banners"] || defaultBanners)
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean);
