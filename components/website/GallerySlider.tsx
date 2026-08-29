@@ -12,31 +12,8 @@ interface GalleryImage {
 
 export function GallerySlider({ images }: { images: GalleryImage[] }) {
   const baseSlides = images.slice(0, 10);
-  const slides = [...baseSlides, ...baseSlides, ...baseSlides];
+  const slides = [...baseSlides, ...baseSlides];
   
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || isHovered) return;
-
-    let animationId: number;
-    const scroll = () => {
-      if (el) {
-        el.scrollLeft += 1;
-        // Reset scroll position when reaching the end of the second set of images
-        if (el.scrollLeft >= el.scrollWidth / 3 * 2) {
-          el.scrollLeft = el.scrollWidth / 3;
-        }
-      }
-      animationId = requestAnimationFrame(scroll);
-    };
-
-    animationId = requestAnimationFrame(scroll);
-    return () => cancelAnimationFrame(animationId);
-  }, [isHovered]);
-
   if (!baseSlides.length) return null;
 
   return (
@@ -51,12 +28,8 @@ export function GallerySlider({ images }: { images: GalleryImage[] }) {
         </div>
 
         {/* Horizontal Slider */}
-        <div 
-          ref={scrollRef}
-          className="-mx-4 flex gap-4 overflow-x-hidden px-4 pb-8 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className="overflow-hidden w-full -mx-4 sm:-mx-6 md:mx-0 px-4 sm:px-6 md:px-0">
+          <div className="flex gap-4 w-max animate-marquee hover:[animation-play-state:paused]">
           {slides.map((slide, i) => (
             <div 
               key={`${slide.id}-${i}`} 
@@ -78,6 +51,7 @@ export function GallerySlider({ images }: { images: GalleryImage[] }) {
               )}
             </div>
           ))}
+          </div>
         </div>
       </div>
     </section>
