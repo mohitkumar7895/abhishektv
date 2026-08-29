@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { CmsImage } from "@/components/website/CmsImage";
+import { resolveWorkImage, SITE_IMAGES } from "@/lib/site-images";
 
 export function OfferSlider({ images }: { images: string[] }) {
   const [active, setActive] = useState(0);
@@ -24,21 +24,21 @@ export function OfferSlider({ images }: { images: string[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative w-full overflow-hidden bg-navy aspect-video md:aspect-[21/9] lg:aspect-[2.5/1]">
+      <div className="relative w-full bg-navy flex items-center justify-center">
         {images.map((img, i) => (
           <div
             key={i}
-            className={`absolute inset-0 transition-all duration-1000 ease-in-out flex items-center justify-center ${
-              i === active ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+            className={`transition-opacity duration-1000 ease-in-out w-full ${
+              i === active ? "opacity-100 relative z-10 block" : "opacity-0 absolute inset-0 z-0 hidden"
             }`}
           >
-            {/* Background blurred for aesthetics in case of letterboxing */}
-            <CmsImage src={img} alt="" sizes="10vw" className="absolute inset-0 h-full w-full object-cover opacity-30 blur-xl scale-110" />
-            
-            {/* main image — contain so it doesn't get cropped */}
-            <CmsImage src={img} alt={`Slide ${i + 1}`} sizes="100vw" className="relative h-full w-full object-contain" priority={i === 0} />
-            {/* Overlay for better readability of dots/arrows */}
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent opacity-60" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src={resolveWorkImage(img) || SITE_IMAGES.hero} 
+              alt={`Slide ${i + 1}`} 
+              className="w-full h-auto object-contain block" 
+              loading={i === 0 ? "eager" : "lazy"} 
+            />
           </div>
         ))}
 
