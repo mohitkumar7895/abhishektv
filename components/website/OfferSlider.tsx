@@ -24,18 +24,18 @@ export function OfferSlider({ images }: { images: string[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative w-full overflow-hidden bg-navy" style={{ minHeight: "340px", maxHeight: "620px", height: "56vw" }}>
+      <div className="relative w-full overflow-hidden bg-navy" style={{ minHeight: "240px", maxHeight: "480px", height: "35vw" }}>
         {images.map((img, i) => (
           <div
             key={i}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              i === active ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              i === active ? "opacity-100 scale-100 z-10" : "opacity-0 scale-105 z-0 pointer-events-none"
             }`}
           >
-            {/* blurred bg fill */}
-            <CmsImage src={img} alt="" sizes="100vw" className="absolute inset-0 h-full w-full object-cover opacity-20 blur-3xl scale-125" />
-            {/* main image — contained so nothing is cropped */}
-            <CmsImage src={img} alt={`Slide ${i + 1}`} sizes="100vw" className="absolute inset-0 h-full w-full object-contain" priority={i === 0} />
+            {/* main image — cover so it fills the banner space */}
+            <CmsImage src={img} alt={`Slide ${i + 1}`} sizes="100vw" className="absolute inset-0 h-full w-full object-cover" priority={i === 0} />
+            {/* Overlay for better readability of dots/arrows */}
+            <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent opacity-60" />
           </div>
         ))}
 
