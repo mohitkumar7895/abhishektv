@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Expand, Images } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Images } from "lucide-react";
 
 interface GalleryImage {
   id: number;
@@ -11,9 +11,33 @@ interface GalleryImage {
 }
 
 export function GallerySlider({ images }: { images: GalleryImage[] }) {
-  const slides = images.slice(0, 10);
+  const baseSlides = images.slice(0, 10);
+  const slides = [...baseSlides, ...baseSlides, ...baseSlides];
+  
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
-  if (!slides.length) return null;
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || isHovered) return;
+
+    let animationId: number;
+    const scroll = () => {
+      if (el) {
+        el.scrollLeft += 1;
+        // Reset scroll position when reaching the end of the second set of images
+        if (el.scrollLeft >= el.scrollWidth / 3 * 2) {
+          el.scrollLeft = el.scrollWidth / 3;
+        }
+      }
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    animationId = requestAnimationFrame(scroll);
+    return () => cancelAnimationFrame(animationId);
+  }, [isHovered]);
+
+  if (!baseSlides.length) return null;
 
   return (
     <section className="section-pad bg-cream overflow-hidden">
@@ -27,11 +51,16 @@ export function GallerySlider({ images }: { images: GalleryImage[] }) {
         </div>
 
         {/* Horizontal Slider */}
-        <div className="-mx-4 flex gap-4 overflow-x-auto snap-x snap-mandatory px-4 pb-8 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
-          {slides.map((slide) => (
+        <div 
+          ref={scrollRef}
+          className="-mx-4 flex gap-4 overflow-x-hidden px-4 pb-8 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {slides.map((slide, i) => (
             <div 
-              key={slide.id} 
-              className="group relative aspect-4/3 w-[260px] shrink-0 snap-center overflow-hidden rounded-xl bg-navy shadow-soft sm:w-[320px] md:w-[360px]"
+              key={`${slide.id}-${i}`} 
+              className="group relative aspect-4/3 w-[260px] shrink-0 overflow-hidden rounded-xl bg-navy shadow-soft sm:w-[320px] md:w-[360px]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
