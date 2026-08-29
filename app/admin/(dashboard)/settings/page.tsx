@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { apiGet, apiPut } from "@/lib/api-client";
 import { AdminGuide } from "@/components/admin/AdminGuide";
-import { ImageField } from "@/components/admin/ImageField";
+import { GalleryField, ImageField } from "@/components/admin/ImageField";
 import { Button } from "@/components/ui/Button";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { useUiStore } from "@/store/ui";
@@ -114,6 +114,15 @@ export default function SettingsPage() {
           hint="Used when a page has no own share photo."
           url={settings["seo.default_og_image"] || null}
           onChange={(next) => setImage("seo.default_og_image", next?.url)}
+        />
+      </section>
+
+      <section className="rounded-2xl border border-line bg-white p-5">
+        <h2 className="font-display text-xl mb-4">Homepage Promo Banners</h2>
+        <GalleryField
+          label="Banner Slider Images"
+          images={settings["promo.banners"] ? settings["promo.banners"].split(",").filter(Boolean) : []}
+          onChange={(next) => setSettings({ ...settings, "promo.banners": next.join(",") })}
         />
       </section>
       {GROUPS.map((group) => (

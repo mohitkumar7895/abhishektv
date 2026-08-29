@@ -6,6 +6,7 @@ import { getSiteContext } from "@/server/services/site";
 import { PageRenderer } from "@/components/website/PageRenderer";
 import { StatsSection } from "@/components/website/StatsSection";
 import { GallerySlider } from "@/components/website/GallerySlider";
+import { OfferSlider } from "@/components/website/OfferSlider";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { query } from "@/lib/db/query";
 
@@ -61,9 +62,15 @@ export default async function HomePage() {
       return true;
     });
 
+    const bannerImages = (site.settings["promo.banners"] || "/images/tv-banner.jpg")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
     return (
       <>
         <PageRenderer sections={topSections} extras={site} homeVariant />
+        {bannerImages.length > 0 && <OfferSlider images={bannerImages} />}
         <PageRenderer sections={servicesSections} extras={site} homeVariant />
         {!hasStatistics && <StatsSection />}
         <PageRenderer sections={whyChooseSections} extras={site} homeVariant />
