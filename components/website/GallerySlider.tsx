@@ -42,7 +42,7 @@ export function GallerySlider({ images }: { images: GalleryImage[] }) {
             {slides.map((slide, index) => (
               <div key={slide.id} className="relative flex h-full min-w-full items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={slide.image_url} alt={slide.alt_text || slide.caption || "TV repair work"} className="h-full w-full object-contain" loading={index === active ? "eager" : "lazy"} decoding="async" />
+                <img src={slide.image_url} alt={slide.alt_text || slide.caption || "TV repair work"} className="h-full w-full object-cover" loading={index === active ? "eager" : "lazy"} decoding="async" />
               </div>
             ))}
             </div>

@@ -6,6 +6,7 @@ import { getSiteContext } from "@/server/services/site";
 import { PageRenderer } from "@/components/website/PageRenderer";
 import { StatsSection } from "@/components/website/StatsSection";
 import { GallerySlider } from "@/components/website/GallerySlider";
+import { PromoBanner } from "@/components/website/PromoBanner";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { query } from "@/lib/db/query";
 
@@ -64,6 +65,7 @@ export default async function HomePage() {
     return (
       <>
         <PageRenderer sections={topSections} extras={site} homeVariant />
+        <PromoBanner />
         <PageRenderer sections={servicesSections} extras={site} homeVariant />
         {!hasStatistics && <StatsSection />}
         <PageRenderer sections={whyChooseSections} extras={site} homeVariant />
