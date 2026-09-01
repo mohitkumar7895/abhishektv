@@ -44,26 +44,20 @@ export default async function HomePage() {
 
     if (!page) notFound();
 
-    const heroTypes = new Set(["offer_slider", "brands", "trust_badges"]);
-    const HIDDEN_HEADINGS = ["Expert TV Repair Services"];
+    const heroTypes = new Set(["hero", "offer_slider", "brands", "trust_badges"]);
 
     const topSections = page.sections.filter((s) => heroTypes.has(s.type));
     const servicesSections = page.sections.filter((s) => s.type === "services_grid");
     const hasStatistics = page.sections.some((s) => s.type === "statistics");
-    const whyChooseSections = page.sections.filter(
-      (s) => s.type === "features" && (s.content?.heading as string | undefined)?.toLowerCase().includes("why choose")
-    );
+    const whyChooseSections = page.sections.filter((s) => s.type === "features");
     const restSections = page.sections.filter((s) => {
-      if (s.type === "hero") return false;
       if (heroTypes.has(s.type)) return false;
       if (s.type === "services_grid" || s.type === "statistics") return false;
-      if (s.type === "features" && (s.content?.heading as string | undefined)?.toLowerCase().includes("why choose")) return false;
-      const heading = (s.content?.heading as string | undefined)?.trim() || "";
-      if (HIDDEN_HEADINGS.some((h) => heading.toLowerCase() === h.toLowerCase())) return false;
+      if (s.type === "features") return false;
       return true;
     });
 
-    const defaultBanners = "/images/promo_banner_1.jpg,/images/promo_banner_2.jpg,/images/promo_banner_3.jpg";
+    const defaultBanners = "/images/tv-banner.jpg";
     const bannerImages = (site.settings["promo.banners"] || defaultBanners)
       .split(",")
       .map((s) => s.trim())
