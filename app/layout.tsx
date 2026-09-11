@@ -54,12 +54,22 @@ export async function generateMetadata(): Promise<Metadata> {
             apple: icon,
           }
         : undefined,
-      verification: settings["seo.gsc"]
-        ? { google: settings["seo.gsc"] }
-        : undefined,
+      verification: {
+        google:
+          settings["seo.gsc"] ||
+          process.env.GOOGLE_SEARCH_CONSOLE ||
+          "2rnz21iIitzh_wa3K5TgEeH9ulgPVKyUosvwBgj_da4",
+      },
     };
   } catch {
-    return { title: "TV Repair Service" };
+    return {
+      title: "TV Repair Service",
+      verification: {
+        google:
+          process.env.GOOGLE_SEARCH_CONSOLE ||
+          "2rnz21iIitzh_wa3K5TgEeH9ulgPVKyUosvwBgj_da4",
+      },
+    };
   }
 }
 
@@ -80,6 +90,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${body.variable} h-full antialiased`} data-scroll-behavior="smooth">
       <head>
+        <meta name="google-site-verification" content="2rnz21iIitzh_wa3K5TgEeH9ulgPVKyUosvwBgj_da4" />
         {icon ? (
           <>
             <link rel="icon" href={icon} />

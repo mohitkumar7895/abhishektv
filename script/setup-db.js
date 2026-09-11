@@ -78,7 +78,7 @@ async function main() {
     "seo.default_og_image": IMG.tv,
     "seo.ga": "",
     "seo.gtm": "",
-    "seo.gsc": "",
+    "seo.gsc": "2rnz21iIitzh_wa3K5TgEeH9ulgPVKyUosvwBgj_da4",
     "footer.copyright": `© ${new Date().getFullYear()} Abhishek LED TV Repair Center. All rights reserved.`,
   };
   for (const [key, value] of Object.entries(settings)) {
