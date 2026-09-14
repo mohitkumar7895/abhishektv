@@ -45,19 +45,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         )
         .map((p) => ({
           url: siteUrl(`/${p.slug}`),
-          lastModified: p.updated_at,
+          lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
           changeFrequency: "weekly" as const,
           priority: 0.7,
         })),
       ...services.map((s) => ({
         url: siteUrl(`/tv-repair/${s.slug}`),
-        lastModified: s.updated_at,
+        lastModified: s.updated_at ? new Date(s.updated_at) : new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.8,
       })),
       ...blogs.map((b) => ({
         url: siteUrl(`/blog/${b.slug}`),
-        lastModified: b.updated_at,
+        lastModified: b.updated_at ? new Date(b.updated_at) : new Date(),
         changeFrequency: "monthly" as const,
         priority: 0.6,
       })),
