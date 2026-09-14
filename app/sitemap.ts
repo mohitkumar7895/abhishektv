@@ -1,6 +1,12 @@
 import type { MetadataRoute } from "next";
 import { listPublishedSlugs } from "@/server/repositories/content.repository";
-import { siteUrl } from "@/lib/utils/cn";
+
+const BASE_URL = "https://abhishekledtvrepair.in";
+
+function siteUrl(path = ""): string {
+  if (!path) return BASE_URL;
+  return `${BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPaths = [
