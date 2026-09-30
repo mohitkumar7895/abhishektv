@@ -18,7 +18,7 @@ function loadEnv() {
 loadEnv();
 
 const SETTINGS = {
-  "business.name": "Abhishek LED TV Repair Center",
+  "business.name": "Abhishek LED TV Repair",
   "business.phone": "9990115217",
   "business.whatsapp": "919990115217",
   "business.address": "Shop No 05, Gali No 15, Sector 47, Noida, Uttar Pradesh 201304",
@@ -27,8 +27,8 @@ const SETTINGS = {
   "business.maps_url": "https://maps.google.com/?q=Shop+No+05,+Gali+No+15,+Sector+47,+Noida",
   "business.working_hours": "Open 24 hours",
   "contact.emergency": "9990115217",
-  "seo.default_title": "Abhishek LED TV Repair Center | TV Repair in Noida",
-  "footer.copyright": `© ${new Date().getFullYear()} Abhishek LED TV Repair Center. All rights reserved.`,
+  "seo.default_title": "Abhishek LED TV Repair | TV Repair in Noida",
+  "footer.copyright": `© ${new Date().getFullYear()} Abhishek LED TV Repair. All rights reserved.`,
 };
 
 async function main() {
@@ -45,16 +45,16 @@ async function main() {
   }
 
   await conn.execute(
-    "UPDATE page_sections SET content = REPLACE(REPLACE(content, 'Helix TV Care', 'India LED TV Repair Center'), 'tel:+919876543210', 'tel:08510951545')",
+    "UPDATE page_sections SET content = REPLACE(REPLACE(REPLACE(content, 'Helix TV Care', 'Abhishek LED TV Repair'), 'India LED TV Repair Center', 'Abhishek LED TV Repair'), 'tel:+919876543210', 'tel:08510951545')",
   );
   await conn.execute(
     "UPDATE page_sections SET content = REPLACE(content, 'Why households call Helix', 'Why households choose us')",
   );
   await conn.execute(
-    "UPDATE pages SET title = REPLACE(title, 'Helix TV Care', 'India LED TV Repair Center'), excerpt = REPLACE(excerpt, 'Helix TV Care', 'India LED TV Repair Center')",
+    "UPDATE pages SET title = REPLACE(REPLACE(title, 'Helix TV Care', 'Abhishek LED TV Repair'), 'India LED TV Repair Center', 'Abhishek LED TV Repair'), excerpt = REPLACE(REPLACE(excerpt, 'Helix TV Care', 'Abhishek LED TV Repair'), 'India LED TV Repair Center', 'Abhishek LED TV Repair')",
   );
   await conn.execute(
-    "UPDATE seo_metadata SET seo_title = REPLACE(seo_title, 'Helix TV Care', 'India LED TV Repair Center'), og_title = REPLACE(og_title, 'Helix TV Care', 'India LED TV Repair Center')",
+    "UPDATE seo_metadata SET seo_title = REPLACE(REPLACE(seo_title, 'Helix TV Care', 'Abhishek LED TV Repair'), 'India LED TV Repair Center', 'Abhishek LED TV Repair'), og_title = REPLACE(REPLACE(og_title, 'Helix TV Care', 'Abhishek LED TV Repair'), 'India LED TV Repair Center', 'Abhishek LED TV Repair')",
   );
 
   await conn.end();

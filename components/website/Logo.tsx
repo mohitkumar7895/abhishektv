@@ -3,7 +3,7 @@ import { Tv } from "lucide-react";
 
 export function Logo({
   light = false,
-  name = "India LED TV Repair Center",
+  name = "Abhishek LED TV Repair",
   src,
 }: {
   light?: boolean;

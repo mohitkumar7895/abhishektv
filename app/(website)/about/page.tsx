@@ -36,10 +36,10 @@ export default async function AboutPage() {
       <section className="container-wide section-pad bg-paper text-ink">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] lg:grid-cols-[1fr_500px] gap-8 lg:gap-12 items-start">
           <div>
-            <h1 className="font-display text-3xl md:text-4xl text-copper">INDIA LED TV REPAIR CENTER</h1>
+            <h1 className="font-display text-3xl md:text-4xl text-copper">ABHISHEK LED TV REPAIR</h1>
             <h2 className="font-display text-2xl md:text-3xl mt-4">About Us</h2>
             <p className="prose-site mt-4">
-              Welcome to INDIA LED TV Repair, your trusted destination for expert LCD, LED, and Smart TV repairs. With years of hands-on experience and a team of skilled technicians, we specialize in diagnosing and fixing all types of television issues—quickly, reliably, and affordably. We use only genuine spare parts and ensure every repair meets high-quality standards, whether it’s a screen issue, sound problem, motherboard fault, or power failure. Customer satisfaction is our top priority, and we pride ourselves on transparent pricing, fast service, and long-lasting results.
+              Welcome to Abhishek LED TV Repair, your trusted destination for expert LCD, LED, and Smart TV repairs. With years of hands-on experience and a team of skilled technicians, we specialize in diagnosing and fixing all types of television issues—quickly, reliably, and affordably. We use only genuine spare parts and ensure every repair meets high-quality standards, whether it’s a screen issue, sound problem, motherboard fault, or power failure. Customer satisfaction is our top priority, and we pride ourselves on transparent pricing, fast service, and long-lasting results.
             </p>
             <p className="prose-site mt-4">
               We offer a wide range of repair services, including:
