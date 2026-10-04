@@ -1,5 +1,13 @@
+// ========================================================
+// WEBSITE ERROR SWITCH:
+// true  = Error dikhega (Application error screen)
+// false = Website bilkul normal chalegi
+// ========================================================
+const SHOW_ERROR = true;
+
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { headers } from "next/headers";
 import { Sora, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { getSettingsMap } from "@/server/repositories/settings.repository";
@@ -28,6 +36,9 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
+  if (SHOW_ERROR) {
+    return { title: "Application Error" };
+  }
   try {
     const settings = await getSettingsMap();
     const icon = resolveSiteIcon(settings);
@@ -74,6 +85,54 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  if (SHOW_ERROR) {
+    let domain = "abhishekledtvrepair.in";
+    try {
+      const headersList = await headers();
+      const host = headersList.get("x-forwarded-host") || headersList.get("host") || "";
+      const cleanHost = host.split(":")[0]?.trim();
+      if (cleanHost && cleanHost !== "localhost" && cleanHost !== "127.0.0.1") {
+        domain = cleanHost;
+      }
+    } catch {
+      // fallback
+    }
+
+    return (
+      <html lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width" />
+          <title>Application Error</title>
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+                body {
+                  margin: 0;
+                  padding: 16px;
+                  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                  font-size: 14px;
+                  line-height: 1.5;
+                  color: #000;
+                  background: #fff;
+                }
+                p {
+                  margin: 0 0 8px 0;
+                }
+              `,
+            }}
+          />
+        </head>
+        <body>
+          <p>
+            Application error: a server-side exception has occurred while loading {domain} (see the server logs for more information).
+          </p>
+          <p>Digest: 1035318626</p>
+        </body>
+      </html>
+    );
+  }
+
   let ga = "";
   let gtm = "";
   let icon = "";
