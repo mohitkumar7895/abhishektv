@@ -60,7 +60,7 @@ export default async function HomePage() {
     const defaultBanners = "/images/tv-banner.jpg";
     const bannerImages = (site.settings["promo.banners"] || defaultBanners)
       .split(",")
-      .map((s) => s.trim())
+      .map((s: string) => s.trim())
       .filter(Boolean);
 
     return (

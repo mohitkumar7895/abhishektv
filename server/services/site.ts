@@ -12,7 +12,27 @@ function settled<T>(result: PromiseSettledResult<T>, fallback: T): T {
   return fallback;
 }
 
-export const getSiteContext = cache(async () => {
+export type SiteContext = {
+  settings: SettingsMap;
+  header: Menu | null;
+  footer: Menu | null;
+  footerLegal: Menu | null;
+  services: Service[];
+  faqs: Faq[];
+  testimonials: ReturnType<typeof listTestimonials> extends Promise<{ data: infer D }> ? D : unknown[];
+};
+
+let siteContextCache: { data: SiteContext; expiresAt: number } | null = null;
+
+export function clearSiteContextCache() {
+  siteContextCache = null;
+}
+
+export const getSiteContext = cache(async (): Promise<SiteContext> => {
+  const now = Date.now();
+  if (siteContextCache && siteContextCache.expiresAt > now) {
+    return siteContextCache.data;
+  }
   const [settings, header, footer, footerLegal, services, faqs, testimonials] = await Promise.allSettled([
     getSettingsMap(),
     getMenuByLocation("header"),
@@ -22,7 +42,7 @@ export const getSiteContext = cache(async () => {
     getActiveFaqs(),
     listTestimonials({ status: "active", all: true, pageSize: 20 }),
   ]);
-  return {
+  const data = {
     settings: settled<SettingsMap>(settings, {}),
     header: settled<Menu | null>(header, null),
     footer: settled<Menu | null>(footer, null),
@@ -31,6 +51,6 @@ export const getSiteContext = cache(async () => {
     faqs: settled<Faq[]>(faqs, []),
     testimonials: testimonials.status === "fulfilled" ? testimonials.value.data : [],
   };
+  siteContextCache = { data, expiresAt: now + 60_000 };
+  return data;
 });
-
-export type SiteContext = Awaited<ReturnType<typeof getSiteContext>>;

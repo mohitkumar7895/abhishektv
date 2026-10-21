@@ -86,7 +86,7 @@ function poolOptions(config: DbConfig, host: string): mysql.PoolOptions {
     password: config.password,
     database: config.database,
     waitForConnections: true,
-    connectionLimit: Number(env("DB_POOL_SIZE", process.env.VERCEL ? "1" : "3") || 3),
+    connectionLimit: Number(env("DB_POOL_SIZE", process.env.VERCEL ? "2" : "10") || 10),
     queueLimit: 0,
     enableKeepAlive: true,
     keepAliveInitialDelay: 10000,

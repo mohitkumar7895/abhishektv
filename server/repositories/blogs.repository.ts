@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { execute, query, queryOne, transaction } from "@/lib/db/query";
 import { pagination, slugify } from "@/lib/utils/cn";
 import { NotFoundError } from "@/lib/utils/errors";
@@ -109,19 +110,39 @@ export async function getBlogById(id: number) {
   return attachTags(row);
 }
 
-export async function getBlogBySlug(slug: string) {
+const blogSlugCache = new Map<string, { data: Blog; expiresAt: number }>();
+
+export function clearBlogSlugCache() {
+  blogSlugCache.clear();
+}
+
+export const getBlogBySlug = cache(async (slug: string): Promise<Blog | null> => {
+  const cleanSlug = (slug || "").trim();
+  const decodedSlug = decodeURIComponent(cleanSlug).trim();
+  const now = Date.now();
+
+  const cached = blogSlugCache.get(cleanSlug) || blogSlugCache.get(decodedSlug);
+  if (cached && cached.expiresAt > now) {
+    return cached.data;
+  }
+
   const row = await queryOne<Blog>(
     `SELECT b.*, m.url AS image_url, u.name AS author_name, c.name AS category_name
      FROM blogs b
      LEFT JOIN media m ON m.id = b.featured_image_id
      LEFT JOIN users u ON u.id = b.author_id
      LEFT JOIN blog_categories c ON c.id = b.category_id
-     WHERE b.slug = ? AND b.status = 'published' AND (b.published_at IS NULL OR b.published_at <= NOW())`,
-    [slug],
+     WHERE (b.slug = ? OR b.slug = ?) AND b.status = 'published' AND (b.published_at IS NULL OR b.published_at <= NOW())`,
+    [cleanSlug, decodedSlug],
   );
   if (!row) return null;
-  return attachTags(row);
-}
+  const full = await attachTags(row);
+  blogSlugCache.set(cleanSlug, { data: full, expiresAt: now + 60_000 });
+  if (decodedSlug !== cleanSlug) {
+    blogSlugCache.set(decodedSlug, { data: full, expiresAt: now + 60_000 });
+  }
+  return full;
+});
 
 async function ensureTag(name: string) {
   const slug = slugify(name);
@@ -188,11 +209,13 @@ export async function saveBlog(input: {
       await execute("INSERT IGNORE INTO blog_tag_map (blog_id, tag_id) VALUES (?,?)", [id, tagId]);
     }
   }
+  clearBlogSlugCache();
   if (input.seo) await upsertSeo("blog", id, input.seo);
   return getBlogById(id);
 }
 
 export async function deleteBlog(id: number) {
+  clearBlogSlugCache();
   await execute("DELETE FROM blogs WHERE id = ?", [id]);
 }
 

@@ -5,6 +5,7 @@ import "./globals.css";
 import { getSettingsMap } from "@/server/repositories/settings.repository";
 import { ToastViewport } from "@/components/shared/ToastViewport";
 import { BookingModal } from "@/components/website/BookingModal";
+import { NavigationProgressBar } from "@/components/website/NavigationProgressBar";
 import { siteUrl } from "@/lib/utils/cn";
 import { resolveSiteIcon } from "@/lib/site-images";
 
@@ -117,6 +118,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         ) : null}
       </head>
       <body className="min-h-full flex flex-col bg-paper text-ink">
+        <NavigationProgressBar />
         {children}
         <ToastViewport />
         <BookingModal />

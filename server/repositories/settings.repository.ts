@@ -2,16 +2,29 @@ import { execute, insertId, query, queryOne } from "@/lib/db/query";
 import type { Setting } from "@/models";
 import type { SettingsMap } from "@/types";
 
+let settingsCache: { data: SettingsMap; expiresAt: number } | null = null;
+
+export function clearSettingsCache() {
+  settingsCache = null;
+}
+
 export async function getSettingsMap(): Promise<SettingsMap> {
+  const now = Date.now();
+  if (settingsCache && settingsCache.expiresAt > now) {
+    return settingsCache.data;
+  }
   const rows = await query<Setting>("SELECT setting_key, setting_value FROM settings");
   const map: SettingsMap = {};
   for (const row of rows) {
     map[row.setting_key] = row.setting_value || "";
   }
+  settingsCache = { data: map, expiresAt: now + 60_000 };
   return map;
 }
 
 export async function getSetting(key: string): Promise<string> {
+  const map = await getSettingsMap();
+  if (key in map) return map[key];
   const row = await queryOne<Setting>(
     "SELECT setting_value FROM settings WHERE setting_key = ?",
     [key],
@@ -20,6 +33,7 @@ export async function getSetting(key: string): Promise<string> {
 }
 
 export async function upsertSettings(values: Record<string, string | null>) {
+  clearSettingsCache();
   for (const [key, value] of Object.entries(values)) {
     const group = key.includes(".") ? key.split(".")[0] : "general";
     const existing = await queryOne<{ id: number }>(

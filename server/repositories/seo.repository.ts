@@ -1,13 +1,14 @@
+import { cache } from "react";
 import { execute, insertId, parseJson, query, queryOne } from "@/lib/db/query";
 import { pagination } from "@/lib/utils/cn";
 import type { PaginatedResult } from "@/types";
 import type { SeoMetadata } from "@/models";
 import type { SeoEntityType } from "@/types";
 
-export async function getSeo(
+export const getSeo = cache(async (
   entityType: SeoEntityType,
   entityId: number,
-): Promise<SeoMetadata | null> {
+): Promise<SeoMetadata | null> => {
   const row = await queryOne<SeoMetadata>(
     `SELECT s.*, og.url AS og_image_url, tw.url AS twitter_image_url
      FROM seo_metadata s
@@ -17,7 +18,7 @@ export async function getSeo(
     [entityType, entityId],
   );
   return row;
-}
+});
 
 export async function upsertSeo(
   entityType: SeoEntityType,
