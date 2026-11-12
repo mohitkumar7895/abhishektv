@@ -27,7 +27,7 @@ export const revalidate = 60;
 
 export async function generateStaticParams() {
   try {
-    const { data } = await listBlogs({ publishedOnly: true, pageSize: 50 });
+    const { data } = await listBlogs({ publishedOnly: true, all: true });
     return data.map((post) => ({ slug: post.slug }));
   } catch {
     return [];

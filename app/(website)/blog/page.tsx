@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogIndexPage() {
   const [{ data }, page] = await Promise.all([
-    listBlogs({ publishedOnly: true, pageSize: 12 }),
+    listBlogs({ publishedOnly: true, all: true }),
     getPublishedPageBySlug("blog"),
   ]);
   return (

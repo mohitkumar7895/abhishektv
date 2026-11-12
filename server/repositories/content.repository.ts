@@ -583,14 +583,23 @@ interface ServiceLite {
 export async function listPublishedSlugs() {
   const [pages, services, blogs] = await Promise.all([
     query<{ slug: string; updated_at: string }>(
-      "SELECT slug, updated_at FROM pages WHERE status = 'published'",
-    ),
+      "SELECT slug, updated_at FROM pages WHERE status = 'published' ORDER BY id ASC",
+    ).catch((err) => {
+      console.error("[sitemap] pages query failed:", err);
+      return [];
+    }),
     query<{ slug: string; updated_at: string }>(
-      "SELECT slug, updated_at FROM services WHERE status = 'published'",
-    ),
+      "SELECT slug, updated_at FROM services WHERE status = 'published' ORDER BY sort_order ASC, id ASC",
+    ).catch((err) => {
+      console.error("[sitemap] services query failed:", err);
+      return [];
+    }),
     query<{ slug: string; updated_at: string }>(
-      "SELECT slug, updated_at FROM blogs WHERE status = 'published'",
-    ),
+      "SELECT slug, COALESCE(updated_at, published_at, created_at) AS updated_at FROM blogs WHERE status = 'published' ORDER BY COALESCE(published_at, created_at) DESC, id DESC",
+    ).catch((err) => {
+      console.error("[sitemap] blogs query failed:", err);
+      return [];
+    }),
   ]);
   return { pages, services, blogs };
 }

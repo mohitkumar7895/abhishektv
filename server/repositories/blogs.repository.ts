@@ -42,6 +42,7 @@ export async function listBlogs(opts: {
   status?: string;
   category?: string;
   publishedOnly?: boolean;
+  all?: boolean;
 }) {
   const { page, pageSize, offset } = pagination(opts.page, opts.pageSize);
   const filters: string[] = [];
@@ -66,6 +67,8 @@ export async function listBlogs(opts: {
     `SELECT COUNT(*) AS count FROM blogs b LEFT JOIN blog_categories c ON c.id = b.category_id ${where}`,
     params,
   );
+  const limitSql = opts.all ? "" : "LIMIT ? OFFSET ?";
+  const limitParams = opts.all ? [] : [pageSize, offset];
   const data = await query<Blog>(
     `SELECT b.*, m.url AS image_url, u.name AS author_name, c.name AS category_name
      FROM blogs b
@@ -74,15 +77,15 @@ export async function listBlogs(opts: {
      LEFT JOIN blog_categories c ON c.id = b.category_id
      ${where}
      ORDER BY COALESCE(b.published_at, b.created_at) DESC
-     LIMIT ? OFFSET ?`,
-    [...params, pageSize, offset],
+     ${limitSql}`,
+    [...params, ...limitParams],
   );
   return {
     data,
     total: totalRow?.count || 0,
     page,
-    pageSize,
-    totalPages: Math.ceil((totalRow?.count || 0) / pageSize),
+    pageSize: opts.all ? data.length : pageSize,
+    totalPages: opts.all ? 1 : Math.ceil((totalRow?.count || 0) / pageSize),
   } satisfies PaginatedResult<Blog>;
 }
 
